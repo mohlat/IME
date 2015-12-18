@@ -1,0 +1,67 @@
+{% load staticfiles %}
+<html>
+<head>
+    <title>django-chartjs line chart demo</title>
+</head>
+<body>
+<h1>Some Line Charts loaded in Ajax!</h1>
+
+<canvas id="myChart" width="500" height="400"></canvas>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+<script type="text/javascript" src="{% static 'Chart.min.js' %}"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var labels = null;
+        $.ajax({
+            url: " {% url 'getDatas' %}",
+            type: "GET",
+            success: function (response) {
+                console.log(JSON.parse(response))
+                var resp = JSON.parse(response);
+                labels = resp.labels;
+                createChart();
+            },
+            complete: function () {
+            },
+            error: function (xhr, textStatus, thrownError) {
+                alert("error doing something");
+            }
+        });
+
+
+        console.log(labels)
+
+        function createChart() {
+            var data = {
+                labels: labels,
+                datasets: [
+                    {
+                        label: "My First dataset",
+                        fillColor: "rgba(220,220,220,0.2)",
+                        strokeColor: "rgba(220,220,220,1)",
+                        pointColor: "rgba(220,220,220,1)",
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(220,220,220,1)",
+                        data: [65, 59, 80, 81, 56, 55, 40]
+                    },
+                    {
+                        label: "My Second dataset",
+                        fillColor: "rgba(151,187,205,0.2)",
+                        strokeColor: "rgba(151,187,205,1)",
+                        pointColor: "rgba(151,187,205,1)",
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(151,187,205,1)",
+                        data: [28, 48, 40, 19, 86, 27, 90]
+                    }]
+            };
+
+            var ctx = $("#myChart").get(0).getContext("2d");
+            new Chart(ctx).Line(data);
+        }
+    });
+</script>
+
+</body>
+</html>
