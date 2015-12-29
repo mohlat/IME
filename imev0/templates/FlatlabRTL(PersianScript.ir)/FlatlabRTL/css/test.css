@@ -1,0 +1,39 @@
+.panel-transparent {
+    background: none;
+}
+
+.panel-transparent .panel-main-heading{
+    background: rgb(210, 205, 203) !important;
+}
+
+.panel-transparent .panel-body{
+    background-color: rgba(245, 245, 245, 0)!important;
+}
+.glyphicon
+{
+    margin-right:4px !important; /*override*/
+}
+
+.pagination .glyphicon
+{
+    margin-right:0px !important; /*override*/
+}
+
+.pagination a
+{
+    color:#555;
+}
+
+.panel ul
+{
+    padding:0px;
+    margin:0px;
+    list-style:none;
+}
+
+.news-item
+{
+    padding:4px 4px;
+    margin:0px;
+    border-bottom:1px dotted #555;
+}
