@@ -17,3 +17,5 @@ class Datas(View):
         datas = [28, 48, 40, 19, 86, 27, 90]
         output = {'labels': labels, 'datas': datas}
         return HttpResponse(json.dumps(output))
+
+
