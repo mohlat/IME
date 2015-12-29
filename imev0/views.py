@@ -2,11 +2,17 @@
 from django.views.generic import TemplateView, View
 from django.http import HttpResponse
 import json
-
+import jdatetime as jdate
 from builtins import print
 
 from openpyxl import Workbook
 from openpyxl import load_workbook
+
+
+ONE_WEEK = 1
+THREE_WEEK = 3
+THREE_MONTHS = 12
+ONE_YEAR = 52
 
 class Index(TemplateView):
     template_name = 'test.html'
@@ -37,14 +43,21 @@ class Datas(View):
 
         for row in ws:
             d = {}
+
+            if row[0].value == 'تاریخ':
+                continue;
+            dates = row[0].value.split('/')
+            pdate = jdate.date(int(dates[0]),int(dates[1]),int(dates[2]))
+
+            d['date'] = pdate
             d['date'] = row[0].value
             d['name'] = row[1].value
             d['producer'] = row[2].value
             d['symbol'] = row[3].value
             d['contract_type'] = row[4].value
-            d['supply'] = row[5].value
+            d['supply'] = float(row[5].value)
             d['base_price'] = row[6].value
-            d['supliers_offer'] = row[7].value
+            d['suppliers_offer'] = row[7].value
             d['final_demand'] = row[8].value
             d['payan_sabz'] = row[9].value
             d['highest_demand_price'] = row[10].value
@@ -59,7 +72,7 @@ class Datas(View):
             d['group'] = row[19].value
             d['main_group'] = row[20].value
             d['details'] = row[21].value
-            d['suplier'] = row[22].value
+            d['supplier'] = row[22].value
             d['method_of_supply'] = row[23].value
             d['supply_code'] = row[24].value
             d['supply_type'] = row[25].value
@@ -67,34 +80,50 @@ class Datas(View):
             self.datas.append(d)
 
 
+    def supply(self, end_date, time_slot, symbol):
 
-    def getProductProducer(self, product_group,start_date,time_slot):
+            x = []
+            y = []
+            d = None
+
+            if time_slot == ONE_WEEK or time_slot == THREE_WEEK:
+                for row in self.datas:
+
+                    if symbol == row['symbol'] and row['date'] <= end_date and row['date'] > end_date - time_slot*7:
+                        x.append(row['date'])
+                        y.append(row['supply'])
+
+                    d = (x, y)
+
+
+
+
+            elif time_slot == THREE_MONTHS:
+                # for row in self.datas:
+                    
+
+
+
+
+
+    def getProductProducer(self, product_group,end_date,time_slot):
 
         result = {}
 
         for item in self.product_producer:
+            charts_per_symbol = {}
+
+
+            charts_per_symbol['supply'] = self.supply()
+            # charts_per_symbol['trade'] = self.trade()
+            # charts_per_symbol['demand'] = self.demand()
+
+            result[item] = charts_per_symbol;
 
 
 
-    def supply(self, end_date, time_slot, product_id, producer_id, payment_type):
-
-        x = []
-        y = []
 
 
-        for row in self.datas:
-
-            symbol = producer_id + '-' + product_id
-            if symbol in row['symbol']:
-                x.append(row['date'])
-                y.append(row['supply'])
-
-
-            d = {}
-            d['x'] = x
-            d['y'] = y
-
-            return d
 
 
 
