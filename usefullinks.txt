@@ -1,0 +1,6 @@
+http://stackoverflow.com/questions/189555/how-to-use-python-to-login-to-a-webpage-and-retrieve-cookies-for-later-usage
+
+https://kazuar.github.io/scraping-tutorial/
+
+
+http://www.metalbulletin.com/My-price-book.html
