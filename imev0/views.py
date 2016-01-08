@@ -34,7 +34,7 @@ class Datas(View):
 
     def initialize(self):
 
-        wb = load_workbook(filename='excel_read/test2.xlsx', read_only=True)
+        wb = load_workbook(filename='static/excel_read/test2.xlsx', read_only=True)
 
         ws = wb.active  # ws is now an IterableWorksheet
 
@@ -47,7 +47,6 @@ class Datas(View):
             persian_date = jdate.date(int(dates[0]), int(dates[1]), int(dates[2]))
 
             d['date'] = persian_date
-            d['date'] = row[0].value
             d['name'] = row[1].value
             d['producer'] = row[2].value
             d['symbol'] = row[3].value
@@ -109,7 +108,7 @@ class Datas(View):
                         sum_value = sum_value + row[chart_name]
                 x.append(date + 1)
                 y.append(sum_value)
-                date += 7
+                date += jdate.timedelta(days = 7)
             d = (x, y)
 
         elif time_slot == ONE_YEAR:
@@ -122,7 +121,7 @@ class Datas(View):
                         sum_value = sum_value + row[chart_name]
                 x.append(date.j_months_fa[date.month - 1])
                 y.append(sum_value)
-                date -= 30
+                date += jdate.timedelta(days = 30)
             d = (x, y)
         return d
 
@@ -141,8 +140,8 @@ class Datas(View):
             charts_per_symbol = {}
 
             charts_per_symbol['supply'] = self.extract_chart(item, 'supply', end_date, time_slot)
-            charts_per_symbol['demand'] = self.extract_chart(item, 'demand', end_date, time_slot)
-            charts_per_symbol['trade'] = self.extract_chart(item, 'trade', end_date, time_slot)
+            charts_per_symbol['demand'] = self.extract_chart(item, 'final_demand', end_date, time_slot)
+            charts_per_symbol['trade'] = self.extract_chart(item, 'traded_amount', end_date, time_slot)
 
             result[item] = charts_per_symbol
         return result
