@@ -4,4 +4,4 @@
 .idea
 imev0/static/test2.xlsx
 .*__pycache__
-*.sql
+db.sqlite3
