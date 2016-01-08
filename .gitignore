@@ -3,5 +3,5 @@
 .Trashes
 .idea
 imev0/static/test2.xlsx
-.*__pycache__
+*__pycache__
 db.sqlite3
