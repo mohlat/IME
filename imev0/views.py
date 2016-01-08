@@ -4,7 +4,6 @@ import json
 import jdatetime as jdate
 from openpyxl import load_workbook
 import os
-
 ONE_WEEK = 1
 THREE_WEEK = 3
 THREE_MONTHS = 12
@@ -12,7 +11,7 @@ ONE_YEAR = 52
 
 
 class Index(TemplateView):
-    template_name = 'FlatlabRTL(PersianScript.ir)/FlatlabRTL/index.html'
+    template_name = 'index.html'
     #template_name = 'test.html'
     def get_context_data(self, **kwargs):
         context = super(Index, self).get_context_data(**kwargs)
@@ -25,12 +24,23 @@ class Datas(View):
         self.product_producer = ['NCI-CCAA-00', 'NCI-CR08AB-00', 'NCI-SLG-00', 'NCI-SLR-00', 'CWD-CR08AB-00']
         self.initialize()
     def get(self, request, *args, **kwargs):
-        print('here')
-        #print(request.GET['salam'])
-        result = self.get_product_producer('copper',jdate.date.today()-jdate.timedelta(days = 90), 3 )
+        per = request.GET['select_and_time[date]']
+        time_slot = int(request.GET['select_and_time[time_slot]'])
+        print(time_slot)
+        code = {u"۰":"0",u"۱":"1",u"۲":"2",u"۳":"3",u"۴":"4",u"۵":"5",u"۶":"6",u"۷":"7",u"۸":"8",u"۹":"9", u"/":"/"}
+        new_per = ''.join(code.get(ch, ch) for ch in per)
+
+        dates = new_per.split('/')
+        if (dates == ['']):
+            persian_date = jdate.date.today()
+        else:
+            persian_date = jdate.date(int(dates[0]), int(dates[1]), int(dates[2]))
+
+        result = self.get_product_producer('copper',persian_date, time_slot )
         datas = result
-        labels = result[self.product_producer[0]]['supply'][0]
-        output = {'labels': labels, 'datas': datas}
+        print(datas['NCI-SLG-00'])
+
+        output = {'datas': datas}
         return HttpResponse(json.dumps(output))
 
 
@@ -97,7 +107,7 @@ class Datas(View):
         if time_slot == ONE_WEEK or time_slot == THREE_WEEK:
         # Considering a week has 7 days, we extract those rows from our database
         # that match the given symbol and time duration given as inputs to the method
-            start_date = end_date - jdate.timedelta(days = 3*7)
+            start_date = end_date - jdate.timedelta(days = time_slot*7)
             date = start_date
             while date <= end_date:
                 t = 0
@@ -128,7 +138,7 @@ class Datas(View):
             d = (x, y)
 
         elif time_slot == ONE_YEAR:
-
+            print('in year')
             start_date = jdate.date(end_date.year - 1, end_date.month, end_date.day)
             # print(str(start_date)+ 'تاریخ شروع ')
             # print(str(end_date) + 'تاریخ پایان ')
