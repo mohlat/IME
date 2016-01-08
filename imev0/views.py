@@ -3,7 +3,7 @@ from django.http import HttpResponse
 import json
 import jdatetime as jdate
 from openpyxl import load_workbook
-
+import os
 
 ONE_WEEK = 1
 THREE_WEEK = 3
@@ -23,21 +23,21 @@ class Datas(View):
     def __init__(self):
         self.datas = []
         self.product_producer = ['NCI-CCAA-00', 'NCI-CR08AB-00', 'NCI-SLG-00', 'NCI-SLR-00', 'CWD-CR08AB-00']
-
+        self.initialize()
     def get(self, request, *args, **kwargs):
 
-        labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July']
-        datas = [28, 48, 40, 19, 86, 27, 90]
+        result = self.get_product_producer('copper',jdate.date.today()-jdate.timedelta(days = 90), 3 )
+        print(result[self.product_producer[0]]['supply'][0])
+        datas = result[self.product_producer[0]]['supply'][1]
+        labels = result[self.product_producer[0]]['supply'][0]
         output = {'labels': labels, 'datas': datas}
+        print(datas)
         return HttpResponse(json.dumps(output))
 
 
     def initialize(self):
-
-        wb = load_workbook(filename='static/excel_read/test2.xlsx', read_only=True)
-
+        wb = load_workbook(filename='imev0/test2.xlsx', read_only=True)
         ws = wb.active  # ws is now an IterableWorksheet
-
         for row in ws:
             d = {}
 
@@ -75,11 +75,19 @@ class Datas(View):
 
             self.datas.append(d)
 
+    def set_to_wednesday(self, date):
+
+        while date.weekday() != 4:
+            date += jdate.timedelta(days = 1)
+        return  date
+
     # This method takes a symbol which represents a certain product produced by a certain company
     # an end date and a time slot with together represent a time duration. For example if time_slot
     # equals 1, it represents a one week duration ending with end_date (time_slot is given in weeks).
-    def extract_chart(self, symbol, chart_name, end_date, time_slot):
 
+
+
+    def extract_chart(self, symbol, chart_name, end_date, time_slot):
         # the list representing the labels of a line chart
         x = []
         # the list representing the data of a line chart
@@ -88,33 +96,47 @@ class Datas(View):
         d = None
 
         if time_slot == ONE_WEEK or time_slot == THREE_WEEK:
-            for row in self.datas:
-
-                # Considering a week has 7 days, we extract those rows from our database
-                # that match the given symbol and time duration given as inputs to the method
-                if symbol == row['symbol'] and row['date'] <= end_date and row['date'] > end_date - time_slot * 7:
-                    x.append(row['date'])
-                    y.append(row[chart_name])
-
-                d = (x, y)
+        # Considering a week has 7 days, we extract those rows from our database
+        # that match the given symbol and time duration given as inputs to the method
+            start_date = end_date - jdate.timedelta(days = 3*7)
+            date = start_date
+            while date <= end_date:
+                t = 0
+                for row in self.datas:
+                    if row['date'] == date and symbol == row['symbol']:
+                        y.append(row[chart_name])
+                        t = 1
+                        break
+                x.append(str(date))
+                if t == 0:
+                    y.append(0)
+                date += jdate.timedelta(days = 1)
+            d = (x, y)
 
         elif time_slot == THREE_MONTHS:
-            start_date = end_date - 12 * 7
+            end_date = self.set_to_wednesday(end_date)
+            start_date = end_date - jdate.timedelta(days = 12*7)
             date = start_date
             while date <= end_date:
                 sum_value = 0
                 for row in self.datas:
-                    if symbol == row['symbol'] and row['date'] > date and row['date'] <= date + 7:
+                    if symbol == row['symbol'] and row['date'] > date and row['date'] <= date + jdate.timedelta(days = 7):
+                        print('in if')
                         sum_value = sum_value + row[chart_name]
-                x.append(date + 1)
+
+                x.append(str(date + jdate.timedelta(days = 7)))
                 y.append(sum_value)
                 date += jdate.timedelta(days = 7)
             d = (x, y)
 
         elif time_slot == ONE_YEAR:
+
             start_date = jdate.date(end_date.year - 1, end_date.month, end_date.day)
+            # print(str(start_date)+ 'تاریخ شروع ')
+            # print(str(end_date) + 'تاریخ پایان ')
             date = start_date
             while date <= end_date:
+                # print(str(date) + 'curr date')
                 sum_value = 0
                 for row in self.datas:
                     if symbol == row['symbol'] and row['date'].year == date.year and row['date'].month == date.month:

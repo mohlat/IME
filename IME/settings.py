@@ -38,7 +38,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'imev0',
-    'chartjs',
 )
 
 MIDDLEWARE_CLASSES = (
