@@ -12,8 +12,8 @@ ONE_YEAR = 52
 
 
 class Index(TemplateView):
-    template_name = 'test.html'
-
+    template_name = 'FlatlabRTL(PersianScript.ir)/FlatlabRTL/index.html'
+    #template_name = 'test.html'
     def get_context_data(self, **kwargs):
         context = super(Index, self).get_context_data(**kwargs)
         return context
@@ -25,13 +25,12 @@ class Datas(View):
         self.product_producer = ['NCI-CCAA-00', 'NCI-CR08AB-00', 'NCI-SLG-00', 'NCI-SLR-00', 'CWD-CR08AB-00']
         self.initialize()
     def get(self, request, *args, **kwargs):
-
+        print('here')
+        #print(request.GET['salam'])
         result = self.get_product_producer('copper',jdate.date.today()-jdate.timedelta(days = 90), 3 )
-        print(result[self.product_producer[0]]['supply'][0])
-        datas = result[self.product_producer[0]]['supply'][1]
+        datas = result
         labels = result[self.product_producer[0]]['supply'][0]
         output = {'labels': labels, 'datas': datas}
-        print(datas)
         return HttpResponse(json.dumps(output))
 
 
@@ -121,7 +120,6 @@ class Datas(View):
                 sum_value = 0
                 for row in self.datas:
                     if symbol == row['symbol'] and row['date'] > date and row['date'] <= date + jdate.timedelta(days = 7):
-                        print('in if')
                         sum_value = sum_value + row[chart_name]
 
                 x.append(str(date + jdate.timedelta(days = 7)))

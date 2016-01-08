@@ -17,10 +17,9 @@
             url: " {% url 'getDatas' %}",
             type: "GET",
             success: function (response) {
-                console.log(JSON.parse(response))
                 var resp = JSON.parse(response);
-                labels = resp.labels;
                 datas = resp.datas;
+
                 createChart();
             },
             complete: function () {
@@ -34,24 +33,53 @@
         console.log(labels);
 
         function createChart() {
+            var key1Trade = datas["NCI-SLG-00"]["trade"];
+            var key1Supply = datas["NCI-SLG-00"]["supply"];
+            var key1Demand = datas["NCI-SLR-00"]["demand"];
             var data = {
-                labels: labels,
+                labels: key1Trade[0],
                 datasets: [
                     {
                         label: "My First dataset",
+                        fillColor: "rgba(220,220,220,0.2)",
+                        strokeColor: "rgba(220,0,0,1)",
+                        pointColor: "rgba(220,0,0,1)",
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(220,220,220,1)",
+                        data: key1Trade[1]
+                    },
+                    {
+                        label: "My Second dataset",
                         fillColor: "rgba(220,220,220,0.2)",
                         strokeColor: "rgba(220,220,220,1)",
                         pointColor: "rgba(220,220,220,1)",
                         pointStrokeColor: "#fff",
                         pointHighlightFill: "#fff",
                         pointHighlightStroke: "rgba(220,220,220,1)",
-                        data: datas
-                    }
+                        data: key1Supply[1]
+                    },
+                    {
+                        label: "My Third dataset",
+                        fillColor: "rgba(220,220,220,0.2)",
+                        strokeColor: "rgba(0,0,220,1)",
+                        pointColor: "rgba(0,0,220,1)",
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(220,220,220,1)",
+                        data: key1Demand[1]
+                    },
+
                     ]
             };
 
             var ctx = $("#myChart").get(0).getContext("2d");
-            new Chart(ctx).Line(data);
+            new Chart(ctx).Line(data,{
+                animation: true,
+                tooltipFillColor: "rgba(0,0,0,0.8)",
+                multiTooltipTemplate: "<%= datasetLabel %> - <%= value %>"
+
+            });
         }
     });
 </script>
