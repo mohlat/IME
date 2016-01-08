@@ -7,16 +7,26 @@
     <meta name="author" content="Mosaddek">
     <meta name="keyword" content="FlatLab, Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
     <link rel="shortcut icon" href="img/favicon.html">
-
     <title>IME Dashboard</title>
+    <script src="js/jquery.js"></script>
 
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="scripts/jquery.bootstrap.newsbox.min.js" type="text/javascript"></script>
+    <link href="css/site.css" rel="stylesheet" type="text/css" />
+    <link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="css/MdBootstrapPersianDateTimePicker/jquery.Bootstrap-PersianDateTimePicker.css" />
     <link rel="stylesheet" href="css/normalize.css" />
     <link rel="stylesheet" href="css/bootstrap-responsive.min.css" />
     <script src="js/jquery-2.1.4.js" type="text/javascript"></script>
     <script src="js/bootstrap.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
+    <link href="css/site.css" rel="stylesheet" type="text/css" />
+    <link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 
-
+    <link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+    <script src="js/jquery.bootstrap.newsbox.js" type="text/javascript"></script>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -29,6 +39,75 @@
     <link href="css/style.css" rel="stylesheet">
     <link href="css/test.css" rel="stylesheet">
     <link href="css/style-responsive.css" rel="stylesheet" />
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+
+
+        google.load("feeds", "1");
+
+        function initialize() {
+            var feed = new google.feeds.Feed("http://www.eghtesadnews.com/Live/Services/Rss/Selected/latest");
+            feed.setNumEntries(20);
+            feed.includeHistoricalEntries();
+
+            console.log(feed);
+            feed.load(function(result) {
+                console.log(result);
+                if (!result.error) {
+                    var container = document.getElementById("feed");
+                    for (var i = 0; i < 20; i++) {
+                        var entry = result.feed.entries[i];
+//                        var n = entry.content.search(" مس ");
+//                        if (n != -1) {
+                            var list = document.createElement("li");
+                            list.setAttribute("class", "news-item");
+
+                            list.innerHTML = "<div class='container-fluid' style='padding: 0'>" +
+                                    "<img src='img/eqtesad.png'  style='margin: 0' class='col-sm-2 img-circle' alt='Responsive image'>" +
+
+                                    "<div class='col-sm-10' style='margin: 0'><a href='"+ entry.link + "'>" + entry.title +"</a><br><span style='font-size: small; display: inline-block;'><p>"+entry.content + "</p></span></div>"+
+                                    " </div>";
+//                            var table = document.createElement("table");
+//                            table.setAttribute("cellpadding", "4");
+//                            var tr = document.createElement("tr");
+//                            var td1 = document.createElement("td");
+//                            var image = document.createElement("img");
+//                            image.setAttribute("src", "img/eqtesad.png");
+//                            image.setAttribute("width", "60");
+//                            image.setAttribute("class", "img-circle");
+//                            td1.appendChild(image);
+//                            tr.appendChild(td1);
+//                            var td2 = document.createElement("td");
+//                            var link = document.createElement("a");
+//                            link.setAttribute("href", entry.link);
+//                            console.log(entry.link);
+//                            link.appendChild(document.createTextNode(i + "  " + entry.title));
+//                            td2.appendChild(link);
+//                            tr.appendChild(td2);
+//                            table.appendChild(tr);
+//                            list.appendChild(table);
+                            container.appendChild(list);
+//                        }
+                    }
+                }
+                $(".demo1").bootstrapNews({
+                    newsPerPage: 5,
+                    autoplay: true,
+                    pauseOnHover:true,
+                    direction: 'up',
+                    newsTickerInterval: 4000,
+                    onToDo: function () {
+                        //console.log(this);
+                    }
+                });
+            });
+        }
+        google.setOnLoadCallback(initialize);
+
+    </script>
+
+
     <script src="js/Chart.min.js"></script>
     <script>
         var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
@@ -245,16 +324,16 @@
             <section class="panel panel-transparent col-sm-12">
                 <div class="container-fluid panel-heading col-sm-12" style="background-color: #6789b7; color: snow;">
                     <div class="col-md-12 container">
-                    <div class="col-sm-6" style="vertical-align: middle;float: right;"><span style=" line-height:2;vertical-align: middle;float: right;">نمودارها</span></div>
-                    <div class="col-sm-4 " style="float: left;margin: 0; padding: 0;">
-                        <div class="form-group col-sm-7" style="margin: 0; padding: 0; float: right;">
-                            <div class="input-group" style="margin: 0; padding: 0;">
-                                <div  class="input-group-addon" data-mddatetimepicker="true" data-trigger="click" data-targetselector="#fromDate1" data-groupid="group1" data-fromdate="true" data-enabletimepicker="false" data-placement="left">
-                                    <i class="icon-calendar"></i>
+                        <div class="col-sm-6" style="vertical-align: middle;float: right;"><span style=" line-height:2;vertical-align: middle;float: right;">نمودارها</span></div>
+                        <div class="col-sm-4 " style="float: left;margin: 0; padding: 0;">
+                            <div class="form-group col-sm-7" style="margin: 0; padding: 0; float: right;">
+                                <div class="input-group" style="margin: 0; padding: 0;">
+                                    <div  class="input-group-addon" data-mddatetimepicker="true" data-trigger="click" data-targetselector="#fromDate1" data-groupid="group1" data-fromdate="true" data-enabletimepicker="false" data-placement="left">
+                                        <i class="icon-calendar"></i>
+                                    </div>
+                                    <input type="text" class="form-control" id="fromDate1" placeholder="تاریخ شروع" data-mddatetimepicker="true" data-trigger="click" data-targetselector="#fromDate1" data-groupid="group1" data-fromdate="true" data-enabletimepicker="false" data-placement="right"/>
                                 </div>
-                                <input type="text" class="form-control" id="fromDate1" placeholder="تاریخ شروع" data-mddatetimepicker="true" data-trigger="click" data-targetselector="#fromDate1" data-groupid="group1" data-fromdate="true" data-enabletimepicker="false" data-placement="right"/>
                             </div>
-                        </div>
 
                             <div class="form-group col-sm-5" style="margin-bottom: 0; padding-bottom: 0;">
                                 <select class="form-control" id="sel1">
@@ -266,8 +345,8 @@
 
                             </div>
 
+                        </div>
                     </div>
-</div>
 
                 </div>
                 <div class="panel-body" >
@@ -359,79 +438,25 @@
 
                     </div>
                 </section>
+
                 <section class="panel panel-transparent col-lg-12">
                     <header class="panel-heading" style=" color: #ffffff;border: 2px solid #6789b7;padding: 10px 40px;background: #6789b7;border-radius: 0px;">
                         <span class="glyphicon glyphicon-list-alt"></span><span>&nbsp;&nbsp;اخبار</span>
                     </header>
+
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-xs-12">
-                                <ul class="demo1">
-                                    <li class="news-item">
-                                        <table cellpadding="4">
-                                            <tr>
-                                                <td><img src="img/eqtesad.png" width="60" class="img-circle" /></td>
-                                                <td><span>یه خبر جالب</span> ... &nbsp;&nbsp;<a href="https://developers.google.com/feed/">بیشتر بخوانید</a></td>
-                                            </tr>
-                                        </table>
-                                    </li>
-                                    <li class="news-item">
-                                        <table cellpadding="4">
-                                            <tr>
-                                                <td><img src="img/eqtesad.png" width="60" class="img-circle" /></td>
-                                                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in venenatis enim... <a href="#">Read more...</a></td>
-                                            </tr>
-                                        </table>
-                                    </li>
-                                    <li class="news-item">
-                                        <table cellpadding="4">
-                                            <tr>
-                                                <td><img src="img/eqtesad.png" width="60" class="img-circle" /></td>
-                                                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in venenatis enim... <a href="#">Read more...</a></td>
-                                            </tr>
-                                        </table>
-                                    </li>
-                                    <li class="news-item">
-                                        <table cellpadding="4">
-                                            <tr>
-                                                <td><img src="img/logo_kitco.gif" width="60" class="img-circle" /></td>
-                                                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in venenatis enim... <a href="#">Read more...</a></td>
-                                            </tr>
-                                        </table>
-                                    </li>
-                                    <li class="news-item">
-                                        <table cellpadding="4">
-                                            <tr>
-                                                <td><img src="img/logo_kitco.gif" width="60" class="img-circle" /></td>
-                                                <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in venenatis enim... <a href="#">Read more...</a></td>
-                                            </tr>
-                                        </table>
-                                    </li>
+                                <ul class="demo1" id="feed">
 
                                 </ul>
                             </div>
                         </div>
                     </div>
                     <div class="panel-footer"> </div>
-                    <script type="text/javascript">
-                        $(function () {
-                            $(".demo1").bootstrapNews({
-                                newsPerPage: 3,
-                                autoplay: true,
-                                pauseOnHover:true,
-                                direction: 'up',
-                                newsTickerInterval: 4000,
-                                onToDo: function () {
-                                    //console.log(this);
-                                }
-                            });
-                        });
-                    </script>
+
                 </section>
             </div>
-
-            </div>
-
         </section>
 
     </section>
@@ -440,8 +465,6 @@
 </section>
 
 
-<!-- js placed at the end of the document so the pages load faster -->
-<script src="js/jquery.js"></script>
 
 <script src="js/bootstrap.min.js"></script>
 <script src="js/jquery.scrollTo.min.js"></script>
@@ -459,28 +482,21 @@
 <!--script for this page-->
 <script src="js/sparkline-chart.js"></script>
 <script src="js/easy-pie-chart.js"></script>
+<!--<script type="text/javascript">-->
+    <!--$(function () {-->
+        <!--$(".demo1").bootstrapNews({-->
+            <!--newsPerPage: 3,-->
+            <!--autoplay: true,-->
+            <!--pauseOnHover:true,-->
+            <!--direction: 'up',-->
+            <!--newsTickerInterval: 4000,-->
+            <!--onToDo: function () {-->
+                <!--console.log(this);-->
+            <!--}-->
+        <!--});-->
+    <!--});-->
+<!--</script>-->
 
-<script>
-
-    //owl carousel
-
-    $(document).ready(function() {
-        $("#owl-demo").owlCarousel({
-            navigation : true,
-            slideSpeed : 300,
-            paginationSpeed : 400,
-            singleItem : true
-
-        });
-    });
-
-    //custom select box
-
-    $(function(){
-        $('select.styled').customSelect();
-    });
-
-</script>
 
 </body>
 </html>
