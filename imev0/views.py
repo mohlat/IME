@@ -26,20 +26,15 @@ class Datas(View):
     def get(self, request, *args, **kwargs):
         per = request.GET['select_and_time[date]']
         time_slot = int(request.GET['select_and_time[time_slot]'])
-        print(time_slot)
         code = {u"۰":"0",u"۱":"1",u"۲":"2",u"۳":"3",u"۴":"4",u"۵":"5",u"۶":"6",u"۷":"7",u"۸":"8",u"۹":"9", u"/":"/"}
         new_per = ''.join(code.get(ch, ch) for ch in per)
-
         dates = new_per.split('/')
         if (dates == ['']):
             persian_date = jdate.date.today()
         else:
             persian_date = jdate.date(int(dates[0]), int(dates[1]), int(dates[2]))
-
         result = self.get_product_producer('copper',persian_date, time_slot )
         datas = result
-        print(datas['NCI-SLG-00'])
-
         output = {'datas': datas}
         return HttpResponse(json.dumps(output))
 
@@ -138,7 +133,6 @@ class Datas(View):
             d = (x, y)
 
         elif time_slot == ONE_YEAR:
-            print('in year')
             start_date = jdate.date(end_date.year - 1, end_date.month, end_date.day)
             # print(str(start_date)+ 'تاریخ شروع ')
             # print(str(end_date) + 'تاریخ پایان ')
